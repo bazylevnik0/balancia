@@ -1,33 +1,95 @@
 import React, {useRef, useEffect} from 'react';
-import { Text, View, StyleSheet, Button, Alert} from 'react-native';
+import { Text, View, StyleSheet, Button, Alert, TouchableOpacity} from 'react-native';
 import Constants from 'expo-constants';
 
 //https://github.com/iddan/react-native-canvas/ 
 import Canvas from 'react-native-canvas';
 
 export default function App() {
+  let field;
+  let weigh;
+  
   const canvasRef = useRef(null);
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       canvas.width = 300;
       canvas.height = 250;
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = 'blue';
-      ctx.fillRect(0, 0, 300, 600);
-      ctx.beginPath(); // Start a new path
-      ctx.moveTo(30, 50); // Move the pen to (30, 50)
-      ctx.lineTo(150, 100); // Draw a line to (150, 100)
-      ctx.stroke(); // Render the path
+      weigh.draw("start");
+      console.log("asda")
     }
   }, [canvasRef]);
+  
+  class Field {
+    rebuild(){
+    }
+    refresh(){
+        //without calculating new num
+    }
+    constructor() {
+        this.num  = Math.floor(Math.random()*16);
+        this.selected = [];
+    }
+  }
 
+  class Weigh {
+    click(){
+        console.log("click");
+    }
+    draw(state){
+        switch (state) {
+            case "start" :
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, 300, 250);
+                //draw start position
+                ctx.beginPath(); 
+                ctx.strokeStyle='black'; 
+                ctx.lineWidth = 10;
+                //base
+                ctx.moveTo(150, 50); 
+                ctx.lineTo(150, 200);
+                //left
+                ctx.moveTo(50, 125); 
+                ctx.lineTo(100, 125);
+                //right
+                ctx.moveTo(200, 125); 
+                ctx.lineTo(250, 125);
+                ctx.stroke();
+                //text
+                ctx.fillStyle = 'black';
+                ctx.font = "50px serif";
+                ctx.fillText(this.count, 120, 245);
+                break;
+            case "current":
+                break;
+        }
+    }
+    refresh(){
+        this.left  = [];
+        this.right = [];
+        this.count =  0; 
+    }
+    constructor() {
+        this.left  = [];
+        this.right = [];
+        this.count =  '00'; //through function from field
+    }
+  }
+
+  field = new Field();
+  weigh = new Weigh();
   return (
     <View style={styles.containerView}>
       <View style={styles.headerView}>
         <Button
             title="?"
-            onPress={() => Alert.alert('Left button pressed')}
+            onPress={() => {
+                weigh.draw("start");
+                console.log('"?" pressed');
+                //Alert.alert('"?" pressed')
+            }}
           />
       </View>
       <View style={styles.fieldView}>
@@ -106,6 +168,16 @@ export default function App() {
       </View>
       <View style={styles.weighView}>
          <Canvas ref={canvasRef} style={{width: 300, height: 250}}/>
+         <TouchableOpacity
+            onPress={weigh.click}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}>
+         </TouchableOpacity>
       </View>
         <View style={styles.footerView}>
           <Button
