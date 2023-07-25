@@ -9,11 +9,12 @@ export default function App() {
   const canvasRef = useRef(null);
   useEffect(() => {
     if (canvasRef.current) {
-    console.log("test");
       const canvas = canvasRef.current;
+      canvas.width = 300;
+      canvas.height = 250;
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = 'blue';
-      ctx.fillRect(0, 0, 300, 300);
+      ctx.fillRect(0, 0, 300, 600);
       ctx.beginPath(); // Start a new path
       ctx.moveTo(30, 50); // Move the pen to (30, 50)
       ctx.lineTo(150, 100); // Draw a line to (150, 100)
@@ -104,58 +105,65 @@ export default function App() {
         </View>
       </View>
       <View style={styles.weighView}>
-         <Canvas ref={canvasRef}/>
+         <Canvas ref={canvasRef} style={{width: 300, height: 250}}/>
       </View>
-      <View>
         <View style={styles.footerView}>
           <Button
             title="<---"
+            style={styles.footerButton}
             onPress={() => Alert.alert('Left button pressed')}
           />
           <Button
             title="-x-"
+              style={styles.footerButton}
+          
             onPress={() => Alert.alert('Right button pressed')}
           />
           <Button
             title="--->"
+              style={styles.footerButton}
+          
             onPress={() => Alert.alert('Left button pressed')}
           />
          </View>
-      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   containerView: {
-    flex: 1,
-    justifyContent: 'center',
+    flex: 12,
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: Constants.statusBarHeight,
   },
   headerView: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'stretch',
-    width: 300,
+    alignSelf: 'stretch',
   },
   fieldView: {
-    flex: 1,
-    justifyContent: 'center',
+    flex: 5,
+    width: '100%',
+    justifyContent: 'space-around',
   },
   fieldViewRow: {
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   weighView: {
-   flex: 1,
-   justifyContent: 'center',
+    flex: 5,
+    width: 300,
+    height: 250,
   },
   footerView: {
-    flex: 0,
-    flexDirection: 'row',
+    flex: 1,
+    width: '100%',
+    flexDirection: 'row',  
+    justifyContent: 'space-between',
   },
   footerButton: {
-    margin: 5,
-  },
+    width: '33.33%',
+    justifyContent: 'stretch',
+  }
 });
