@@ -109,18 +109,18 @@ export default function App() {
       </View>
         <View style={styles.footerView}>
           <Button
-            title="<---"
+            title="<-----"
             style={styles.footerButton}
             onPress={() => Alert.alert('Left button pressed')}
           />
           <Button
-            title="-x-"
+            title="---x---"
               style={styles.footerButton}
           
             onPress={() => Alert.alert('Right button pressed')}
           />
           <Button
-            title="--->"
+            title="----->"
               style={styles.footerButton}
           
             onPress={() => Alert.alert('Left button pressed')}
@@ -152,18 +152,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   weighView: {
-    flex: 5,
+    flex: 5.25,
     width: 300,
     height: 250,
   },
   footerView: {
-    flex: 1,
+    flex: 0.75,
     width: '100%',
     flexDirection: 'row',  
     justifyContent: 'space-between',
+    backgroundColor: 'blue',
   },
   footerButton: {
     width: '33.33%',
-    justifyContent: 'stretch',
   }
 });
