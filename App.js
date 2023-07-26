@@ -5,6 +5,8 @@ import Constants from 'expo-constants';
 //https://github.com/iddan/react-native-canvas/ 
 import Canvas from 'react-native-canvas';
 
+//made with Bard participating
+
 const styles = StyleSheet.create({
   containerView: {
     flex: 12,
@@ -294,3 +296,5 @@ export default function App() {
     </View>
   );
 }
+
+
