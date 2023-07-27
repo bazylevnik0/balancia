@@ -40,178 +40,73 @@ const styles = StyleSheet.create({
   footerButton: {
     width: '33.33%',
   },
-  buttonVisible: {
-    color: 'blue',
-  },
-  buttonInvisible: {
-    backgroundColor: 'red',
-  },
 });
 
 export default function App() {
-  
-  let field;
-  let weigh;
-  
-  const canvasRef = useRef(null);
-  useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current;
-      canvas.width = 300;
-      canvas.height = 250;
-      weigh.draw();
-    }
-  }, [canvasRef]);
-  
-  const [buttons,setButtons] = useState([ 
-          <Button
-            title="00"
-            disabled
-            onPress={() => field.select(0)}
-          />,
-          <Button
-            title="01"
-            disabled
-            onPress={() => field.select(1)}
-          />,
-          <Button
-            title="02"
-            disabled
-            onPress={() => field.select(2)}
-          />,
-          <Button
-            title="03"
-            disabled
-            onPress={() => field.select(3)}
-          />,
-          <Button
-            title="04"
-            disabled
-            onPress={() => field.select(4)}
-          />,
-          <Button
-            title="05"
-            disabled
-            onPress={() => field.select(5)}
-          />,
-          <Button
-            title="06"
-            disabled
-            onPress={() => field.select(6)}
-          />,
-          <Button
-            title="07"
-            disabled
-            onPress={() => field.select(7)}
-          />,
-          <Button
-            title="08"
-            disabled
-            onPress={() => field.select(8)}
-          />,
-          <Button
-            title="09"
-            disabled
-            onPress={() => field.select(9)}
-          />,
-          <Button
-            title="10"
-            disabled
-            onPress={() => field.select(10)}
-          />,
-          <Button
-            title="11"
-            disabled
-            onPress={() => field.select(11)}
-          />,
-          <Button
-            title="12"
-            disabled
-            onPress={() => field.select(12)}
-          />,
-          <Button
-            title="13"
-            disabled
-            onPress={() => field.select(13)}
-          />,
-          <Button
-            title="14"
-            disabled
-            onPress={() => field.select(14)}
-          />,
-          <Button
-            title="15"
-            disabled
-            onPress={() => field.select(15)}
-          />,]);
-
-
-  class Field {
-    constructor() {
-        this.num = 0;
-        this.selected = [];
-    }
+  [buttons ,setButtons]=useState([]);
+  [selected,setSelected]=useState([]);
+  let field =  {
+    num : 0,
     build(){
+      setSelected([]);
       //calc new num
-      this.num = Math.floor(Math.random()*14)+3;
-    
-      for (let i = 0; i < this.num; i++) {
+      field.num = Math.floor(Math.random()*14)+3;
+      for (let i = 0; i < field.num; i++) {
          let title;
          if(i<10){
            title="0"+i;
          } else title = ""+i;
-         buttons[i] = (<Button
+            buttons[i] = (<Button
             title={title}
             color="blue"
             onPress={() => field.select(i)}
             />);
       }
-      for (let i = this.num; i < 16; i++) {
+      for (let i = field.num; i < 16; i++) {
          let title;
          if(i<10){
            title="0"+i;
          } else title = ""+i;
-         buttons[i] = (<Button
+            buttons[i] = (<Button
             title={title}
             disabled
             onPress={() => field.select(i)}
             />);
       }
-      setButtons([...buttons]);// 
-
-    }
+      console.log("test")
+      setButtons([...buttons])
+    },
     refresh(){
       //without calculating new num
-    }
+    },
     select(num){
-      if(!this.selected.includes(num)){
-      this.selected.push(num);
-      let title;
-      if(num<10){
-        title="0"+num;
-      } else title = ""+num;
-      buttons[num] = (<Button
-          title={title}
-          color="green"
-          onPress={() => field.select(num)}
-      />);
-      setButtons([...buttons]);
+      if(!selected.includes(num)){
+        selected.push(num);
+        let title;
+        if(num<10){
+          title="0"+num;
+        } else title = ""+num;
+            buttons[num] = (<Button
+            title={title}
+            color="green"
+            onPress={() => field.select(num)}
+        />);
+        setButtons([...buttons]);
+        setSelected([...selected]);
       }
     }
   }
 
-  class Weigh {
-    constructor() {
-      this.left  = [];
-      this.right = [];
-      this.count =  '00'; //through function from field
-      this.state = "start";
-    }
+  let weigh = {
+    left  : [],
+    right : [],
+    count :  '00', //through function from field
+    state : "start",
     draw(){
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
            
-        switch (this.state) {
+        switch (weigh.state) {
             case "start":
                 ctx.fillStyle = 'white';
                 ctx.fillRect(0, 0, 300, 250);
@@ -243,25 +138,35 @@ export default function App() {
                 ctx.fillText(this.count, 121, 245);  
                 break;
         }
-    }
+    },
     refresh(){
-        this.left  = [];
-        this.right = [];
-        this.count =  0; 
-    }
-    click(obj){
+        weigh.left  = [];
+        weigh.right = [];
+        weigh.count =  0; 
+    },
+    click(){
       console.log("test")
-      if(weigh.state == "start") {
-        field.build();
-      }
+      field.build();
       weigh.state="weigh";
       setWeigh(weigh);
       weigh.draw();                        
-    }
+    },
   }
 
-  [field,setField] = useState(new Field());
-  [weigh,setWeigh] = useState(new Weigh());
+  
+  const canvasRef = useRef(null);
+  [field,setField] = useState(field);
+  [weigh,setWeigh] = useState(weigh);
+  useEffect(() => {
+    if (canvasRef.current) {
+      const canvas = canvasRef.current;
+      canvas.width = 300;
+      canvas.height = 250;
+      weigh.draw(); //first "welcome" draw
+    }
+  }, [canvasRef]);
+
+  
   return (
     <View style={styles.containerView}>
       <View style={styles.headerView}>
