@@ -1,11 +1,8 @@
+//made with Bard participating
 import React, {useRef, useEffect, useState} from 'react';
 import { Text, View, StyleSheet, Button, Alert, TouchableOpacity} from 'react-native';
 import Constants from 'expo-constants';
-
-//https://github.com/iddan/react-native-canvas/ 
-import Canvas from 'react-native-canvas';
-
-//made with Bard participating
+import Canvas from 'react-native-canvas'; //https://github.com/iddan/react-native-canvas/ 
 
 const styles = StyleSheet.create({
   containerView: {
@@ -62,81 +59,101 @@ export default function App() {
       const canvas = canvasRef.current;
       canvas.width = 300;
       canvas.height = 250;
-      weigh.draw("start");
-      console.log("asda");
+      weigh.draw();
     }
   }, [canvasRef]);
+  
   const [buttons,setButtons] = useState([ 
           <Button
             title="00"
-            onPress={() => Alert.alert('Left button pressed')}
+            disabled
+            onPress={() => field.select(0)}
           />,
           <Button
             title="01"
-            onPress={() => Alert.alert('Right button pressed')}
+            disabled
+            onPress={() => field.select(1)}
           />,
           <Button
             title="02"
-            onPress={() => Alert.alert('Left button pressed')}
+            disabled
+            onPress={() => field.select(2)}
           />,
           <Button
             title="03"
-            onPress={() => Alert.alert('Right button pressed')}
+            disabled
+            onPress={() => field.select(3)}
           />,
           <Button
             title="04"
-            onPress={() => Alert.alert('Left button pressed')}
+            disabled
+            onPress={() => field.select(4)}
           />,
           <Button
             title="05"
-            onPress={() => Alert.alert('Right button pressed')}
+            disabled
+            onPress={() => field.select(5)}
           />,
           <Button
             title="06"
-            onPress={() => Alert.alert('Left button pressed')}
+            disabled
+            onPress={() => field.select(6)}
           />,
           <Button
             title="07"
-            onPress={() => Alert.alert('Right button pressed')}
+            disabled
+            onPress={() => field.select(7)}
           />,
           <Button
             title="08"
-            onPress={() => Alert.alert('Left button pressed')}
+            disabled
+            onPress={() => field.select(8)}
           />,
           <Button
             title="09"
-            onPress={() => Alert.alert('Right button pressed')}
+            disabled
+            onPress={() => field.select(9)}
           />,
           <Button
             title="10"
-            onPress={() => Alert.alert('Left button pressed')}
+            disabled
+            onPress={() => field.select(10)}
           />,
           <Button
             title="11"
-            onPress={() => Alert.alert('Right button pressed')}
+            disabled
+            onPress={() => field.select(11)}
           />,
           <Button
             title="12"
-            onPress={() => Alert.alert('Left button pressed')}
+            disabled
+            onPress={() => field.select(12)}
           />,
           <Button
             title="13"
-            onPress={() => Alert.alert('Right button pressed')}
+            disabled
+            onPress={() => field.select(13)}
           />,
           <Button
             title="14"
-            onPress={() => Alert.alert('Left button pressed')}
+            disabled
+            onPress={() => field.select(14)}
           />,
           <Button
             title="15"
-            onPress={() => Alert.alert('Right button pressed')}
+            disabled
+            onPress={() => field.select(15)}
           />,]);
 
 
   class Field {
+    constructor() {
+        this.num = 0;
+        this.selected = [];
+    }
     build(){
       //calc new num
-      this.num = Math.floor(Math.random()*14)+2;
+      this.num = Math.floor(Math.random()*14)+3;
     
       for (let i = 0; i < this.num; i++) {
          let title;
@@ -146,7 +163,7 @@ export default function App() {
          buttons[i] = (<Button
             title={title}
             color="blue"
-            onPress={() => Alert.alert('Left button pressed')}
+            onPress={() => field.select(i)}
             />);
       }
       for (let i = this.num; i < 16; i++) {
@@ -156,9 +173,8 @@ export default function App() {
          } else title = ""+i;
          buttons[i] = (<Button
             title={title}
-            color="white"
             disabled
-            onPress={() => Alert.alert('Left button pressed')}
+            onPress={() => field.select(i)}
             />);
       }
       setButtons([...buttons]);// 
@@ -167,23 +183,44 @@ export default function App() {
     refresh(){
       //without calculating new num
     }
-    constructor() {
-        this.num = 0;
-        this.selected = [];
-        this.elements = [];//!
+    select(num){
+      if(!this.selected.includes(num)){
+      this.selected.push(num);
+      let title;
+      if(num<10){
+        title="0"+num;
+      } else title = ""+num;
+      buttons[num] = (<Button
+          title={title}
+          color="green"
+          onPress={() => field.select(num)}
+      />);
+      setButtons([...buttons]);
+      }
     }
   }
 
   class Weigh {
-    click(){
-        console.log("click");
-        field.build();
+    constructor() {
+      this.left  = [];
+      this.right = [];
+      this.count =  '00'; //through function from field
+      this.state = "start";
     }
-    draw(state){
-        switch (state) {
-            case "start" :
-                const canvas = canvasRef.current;
-                const ctx = canvas.getContext('2d');
+    draw(){
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+           
+        switch (this.state) {
+            case "start":
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, 300, 250);
+                //draw text
+                ctx.fillStyle = 'black';
+                ctx.font = "40px sans";
+                ctx.fillText("press to start", 30, 125);
+                break;
+            case "weigh":
                 ctx.fillStyle = 'white';
                 ctx.fillRect(0, 0, 300, 250);
                 //draw start position
@@ -202,10 +239,8 @@ export default function App() {
                 ctx.stroke();
                 //text
                 ctx.fillStyle = 'black';
-                ctx.font = "50px serif";
-                ctx.fillText(this.count, 121, 245);
-                break;
-            case "current":
+                ctx.font = "50px sans";
+                ctx.fillText(this.count, 121, 245);  
                 break;
         }
     }
@@ -214,22 +249,25 @@ export default function App() {
         this.right = [];
         this.count =  0; 
     }
-    constructor() {
-        this.left  = [];
-        this.right = [];
-        this.count =  '00'; //through function from field
+    click(obj){
+      console.log("test")
+      if(weigh.state == "start") {
+        field.build();
+      }
+      weigh.state="weigh";
+      setWeigh(weigh);
+      weigh.draw();                        
     }
   }
 
-  field = new Field();
-  weigh = new Weigh();
+  [field,setField] = useState(new Field());
+  [weigh,setWeigh] = useState(new Weigh());
   return (
     <View style={styles.containerView}>
       <View style={styles.headerView}>
         <Button
             title="?"
             onPress={() => {
-                weigh.draw("start");
                 console.log('"?" pressed');
                 //Alert.alert('"?" pressed')
             }}
@@ -296,5 +334,3 @@ export default function App() {
     </View>
   );
 }
-
-
