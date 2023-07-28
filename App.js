@@ -164,16 +164,14 @@ export default function App() {
                 ctx.moveTo(50 , 125+(5*left_weight)+star_shift); 
                 ctx.lineTo(100, 125+(5*left_weight)+star_shift);
                 ctx.stroke();
+                ctx.beginPath(); 
                 ctx.lineWidth = 3;
+                ctx.strokeStyle='blue'; 
                 for(let i = 0; i < left_weight; i++){
-                   ctx.beginPath(); 
-                   if(star_shift&&i==0){
-                    ctx.strokeStyle='red'; 
-                   } else ctx.strokeStyle='green'; 
                    ctx.moveTo(50 , 125+(5*left_weight)-(i*5)-10+star_shift); 
                    ctx.lineTo(100, 125+(5*left_weight)-(i*5)-10+star_shift);
-                   ctx.stroke();
                 }
+                ctx.stroke();
                 star_shift = 0;
                 //right
                 let right_weight = weigh.right.length;
@@ -186,15 +184,12 @@ export default function App() {
                 ctx.stroke();
                 ctx.beginPath(); 
                 ctx.lineWidth = 3;
+                ctx.strokeStyle='blue';
                 for(let i = 0; i < right_weight; i++){
-                   ctx.beginPath(); 
-                   if(star_shift&&i==0){
-                    ctx.strokeStyle='red'; 
-                   } else ctx.strokeStyle='green'; 
                    ctx.moveTo(200, 125+(5*right_weight)-(i*5)-10+star_shift); 
                    ctx.lineTo(250, 125+(5*right_weight)-(i*5)-10+star_shift);
-                   ctx.stroke();
                 }
+                ctx.stroke();
                 star_shift = 0;
                 //text
                 ctx.fillStyle = 'black';
@@ -206,7 +201,7 @@ export default function App() {
     refresh(){
         weigh.left  = [];
         weigh.right = [];
-        weigh.count = Math.ceil(Math.pow(field.num+1, 1/3)); 
+        weigh.count = Math.ceil(Math.pow(field.num+1, 1/3))+1; 
     },
     click(){
       if(weigh.state=="start") field.build();
