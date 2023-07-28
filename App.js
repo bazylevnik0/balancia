@@ -43,14 +43,18 @@ const styles = StyleSheet.create({
 });
 
 export default function App() {
-  [buttons ,setButtons]=useState([]);
+  let field;
+  [buttons ,setButtons] =useState([]);
   [selected,setSelected]=useState([]);
-  let field =  {
-    num : 0,
+  field =  {
+    num : 0, 
+    star: undefined,
     build(){
       setSelected([]);
-      //calc new num
-      field.num = Math.floor(Math.random()*14)+3;
+      //calc new num and star
+      field.num  = Math.floor(Math.random()*14)+3;
+      field.star = Math.floor(Math.random()*(field.num));
+      console.log(field.num,field.star)
       for (let i = 0; i < field.num; i++) {
          let title;
          if(i<10){
@@ -73,11 +77,34 @@ export default function App() {
             onPress={() => field.select(i)}
             />);
       }
-      console.log("test")
-      setButtons([...buttons])
+      setButtons([...buttons]);
+      weigh.refresh();
     },
     refresh(){
       //without calculating new num
+      for (let i = 0; i < field.num; i++) {
+         let title;
+         if(i<10){
+           title="0"+i;
+         } else title = ""+i;
+            buttons[i] = (<Button
+            title={title}
+            color="blue"
+            onPress={() => field.select(i)}
+            />);
+      }
+      for (let i = field.num; i < 16; i++) {
+         let title;
+         if(i<10){
+           title="0"+i;
+         } else title = ""+i;
+            buttons[i] = (<Button
+            title={title}
+            disabled
+            onPress={() => field.select(i)}
+            />);
+      }
+      setButtons([...buttons]);
     },
     select(num){
       if(!selected.includes(num)){
@@ -97,10 +124,11 @@ export default function App() {
     }
   }
 
-  let weigh = {
+  let weigh; 
+  weigh = {
     left  : [],
     right : [],
-    count :  '00', //through function from field
+    count : 0,
     state : "start",
     draw(){
         const canvas = canvasRef.current;
@@ -118,38 +146,76 @@ export default function App() {
             case "weigh":
                 ctx.fillStyle = 'white';
                 ctx.fillRect(0, 0, 300, 250);
-                //draw start position
+                //draw weigh position
                 ctx.beginPath(); 
                 ctx.strokeStyle='black'; 
                 ctx.lineWidth = 10;
                 //base
                 ctx.moveTo(150, 50); 
                 ctx.lineTo(150, 200);
-                //left
-                ctx.moveTo(50, 125); 
-                ctx.lineTo(100, 125);
-                //right
-                ctx.moveTo(200, 125); 
-                ctx.lineTo(250, 125);
                 ctx.stroke();
+                let star_shift = 0;
+                //left
+                let left_weight  = weigh.left.length;
+                if(weigh.left.includes(field.star))star_shift = 20;
+                ctx.strokeStyle='black'; 
+                ctx.beginPath(); 
+                ctx.lineWidth = 10;
+                ctx.moveTo(50 , 125+(5*left_weight)+star_shift); 
+                ctx.lineTo(100, 125+(5*left_weight)+star_shift);
+                ctx.stroke();
+                ctx.lineWidth = 3;
+                for(let i = 0; i < left_weight; i++){
+                   ctx.beginPath(); 
+                   if(star_shift&&i==0){
+                    ctx.strokeStyle='red'; 
+                   } else ctx.strokeStyle='green'; 
+                   ctx.moveTo(50 , 125+(5*left_weight)-(i*5)-10+star_shift); 
+                   ctx.lineTo(100, 125+(5*left_weight)-(i*5)-10+star_shift);
+                   ctx.stroke();
+                }
+                star_shift = 0;
+                //right
+                let right_weight = weigh.right.length;
+                if(weigh.right.includes(field.star))star_shift = 20;
+                ctx.strokeStyle='black';
+                ctx.lineWidth = 10;
+                ctx.beginPath(); 
+                ctx.moveTo(200, 125+(5*right_weight)+star_shift); 
+                ctx.lineTo(250, 125+(5*right_weight)+star_shift);
+                ctx.stroke();
+                ctx.beginPath(); 
+                ctx.lineWidth = 3;
+                for(let i = 0; i < right_weight; i++){
+                   ctx.beginPath(); 
+                   if(star_shift&&i==0){
+                    ctx.strokeStyle='red'; 
+                   } else ctx.strokeStyle='green'; 
+                   ctx.moveTo(200, 125+(5*right_weight)-(i*5)-10+star_shift); 
+                   ctx.lineTo(250, 125+(5*right_weight)-(i*5)-10+star_shift);
+                   ctx.stroke();
+                }
+                star_shift = 0;
                 //text
                 ctx.fillStyle = 'black';
                 ctx.font = "50px sans";
-                ctx.fillText(this.count, 121, 245);  
+                ctx.fillText("0"+weigh.count, 121, 245);  
                 break;
         }
     },
     refresh(){
         weigh.left  = [];
         weigh.right = [];
-        weigh.count =  0; 
+        weigh.count = Math.ceil(Math.pow(field.num+1, 1/3)); 
     },
     click(){
-      console.log("test")
-      field.build();
+      if(weigh.state=="start") field.build();
+      if(weigh.count>0){
       weigh.state="weigh";
       setWeigh(weigh);
-      weigh.draw();                        
+      weigh.count--;
+      weigh.draw();     
+      }                   
     },
   }
 
@@ -221,19 +287,34 @@ export default function App() {
           <Button
             title="<-----"
             style={styles.footerButton}
-            onPress={() => Alert.alert('Left button pressed')}
+            onPress={() => {
+              Alert.alert("added to left: ",selected.toString());
+              weigh.left = [...selected];
+              setSelected([]);
+              field.refresh();
+              console.log("left:",weigh.left);
+            }}
           />
           <Button
             title="---x---"
-              style={styles.footerButton}
-          
-            onPress={() => Alert.alert('Right button pressed')}
+            style={styles.footerButton}
+            onPress={() => {
+              //Alert.alert('Right button pressed')
+              field.build(); //!
+              weigh.refresh();
+              weigh.draw();
+            }}
           />
           <Button
             title="----->"
-              style={styles.footerButton}
-          
-            onPress={() => Alert.alert('Left button pressed')}
+            style={styles.footerButton}
+            onPress={() => {
+              Alert.alert("added to right: ",selected.toString());
+              weigh.right = [...selected];
+              setSelected([]);
+              field.refresh();
+              console.log("right:",weigh.right);
+            }}
           />
          </View>
     </View>
