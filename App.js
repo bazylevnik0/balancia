@@ -128,7 +128,7 @@ export default function App() {
         } else title = ""+num;
             buttons[num] = (<Button
             title={title}
-            color="blue"
+            color="pink"
             onPress={() => field.select(num)}
         />);
       }
