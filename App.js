@@ -6,7 +6,7 @@ import Canvas from 'react-native-canvas'; //https://github.com/iddan/react-nativ
 
 const styles = StyleSheet.create({
   containerView: {
-    flex: 12,
+    flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: Constants.statusBarHeight,
@@ -16,26 +16,28 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   fieldView: {
-    flex: 5,
+    flex: 4,
     width: '100%',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
   },
   fieldViewRow: {
+    marginBottom: 20,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
   weighView: {
-    flex: 5.25,
+    flex: 4,
     width: 300,
     height: 250,
+    justifyContent: 'flex-start',
   },
   footerView: {
-    flex: 0.75,
+    flex: 1,
     width: '100%',
     flexDirection: 'row',  
     justifyContent: 'space-between',
-    backgroundColor: 'blue',
+    backgroundColor: 'red',
   },
   footerButton: {
     width: '33.33%',
@@ -61,7 +63,7 @@ export default function App() {
          } else title = ""+i;
             buttons[i] = (<Button
             title={title}
-            color="blue"
+            color="pink"
             onPress={() => field.select(i)}
             />);
       }
@@ -88,7 +90,7 @@ export default function App() {
          } else title = ""+i;
             buttons[i] = (<Button
             title={title}
-            color="blue"
+            color="pink"
             onPress={() => field.select(i)}
             />);
       }
@@ -114,7 +116,7 @@ export default function App() {
         } else title = ""+num;
             buttons[num] = (<Button
             title={title}
-            color="green"
+            color="red"
             onPress={() => field.select(num)}
         />);
       } else {
@@ -177,7 +179,7 @@ export default function App() {
                 ctx.stroke();
                 ctx.beginPath(); 
                 ctx.lineWidth = 3;
-                ctx.strokeStyle='blue'; 
+                ctx.strokeStyle='red'; 
                 for(let i = 0; i < left_weight; i++){
                    ctx.moveTo(50 , 125+(5*left_weight)-(i*5)-10+star_shift); 
                    ctx.lineTo(100, 125+(5*left_weight)-(i*5)-10+star_shift);
@@ -195,7 +197,7 @@ export default function App() {
                 ctx.stroke();
                 ctx.beginPath(); 
                 ctx.lineWidth = 3;
-                ctx.strokeStyle='blue';
+                ctx.strokeStyle='red';
                 for(let i = 0; i < right_weight; i++){
                    ctx.moveTo(200, 125+(5*right_weight)-(i*5)-10+star_shift); 
                    ctx.lineTo(250, 125+(5*right_weight)-(i*5)-10+star_shift);
@@ -243,9 +245,10 @@ export default function App() {
     <View style={styles.containerView}>
       <View style={styles.headerView}>
         <Button
-            title="?"
+            title="📜"
+            color="pink"
             onPress={() => {
-                Alert.alert('Goal: find the star!','Rules: select elements to field and place them on weigh, count of weigh is limited.\nAdvice: all element have the same weight, but weight of the star is much more...\n\nControl:\n-for select element click to number in the field,\n-for place selected element to the left part of weight - select and press left, same for the right...\n-for trying to guess the star - select one element and click to "x"')
+                Alert.alert('Goal: find the ⭐ star!','Rules:\n select elements to field and place them on weigh, count of weigh is limited.\nAdvice:\n all element have the same weight, but weight of the star is much more...\n\nControl:\n☞for select element click to number in the field,\n☞for place selected element to the left part of weight - select and press left, same for the right...\n☞for trying to guess the star - select one element and click to "x"')
             }}
           />
       </View>
@@ -290,7 +293,8 @@ export default function App() {
       </View>
         <View style={styles.footerView}>
           <Button
-            title="<-----"
+            title="⬅️⬅️⬅️"
+            color="pink"
             style={styles.footerButton}
             onPress={() => {
               Alert.alert("added to left: ",selected.toString());
@@ -300,7 +304,8 @@ export default function App() {
             }}
           />
           <Button
-            title="---x---"
+            title="▪️▪️⚠️▪️▪️"
+            color="pink"
             style={styles.footerButton}
             onPress={() => {
               //if not only one selected then show warning
@@ -315,18 +320,19 @@ export default function App() {
                 //if succesfull - succesfull mesage and restart
                 //if not then write(you can try) again
                 if(succesfull) {
-                     Alert.alert("Succesfull, let's try to find next star");
+                     Alert.alert("🌟","Succesfull, let's try to find next star");
                      field.build(); 
                      weigh.refresh();
                 } else {
-                  Alert.alert("Failure, let's continue trying this star");
+                  Alert.alert("⛔", "Failure, let's continue trying this star");
                 }
                 weigh.draw();
               }
             }}
           />
           <Button
-            title="----->"
+            title="➡️➡️➡️"
+            color="pink"
             style={styles.footerButton}
             onPress={() => {
               Alert.alert("added to right: ",selected.toString());
