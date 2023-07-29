@@ -54,7 +54,6 @@ export default function App() {
       //calc new num and star
       field.num  = Math.floor(Math.random()*14)+3;
       field.star = Math.floor(Math.random()*(field.num));
-      console.log(field.num,field.star)
       for (let i = 0; i < field.num; i++) {
          let title;
          if(i<10){
@@ -118,9 +117,21 @@ export default function App() {
             color="green"
             onPress={() => field.select(num)}
         />);
-        setButtons([...buttons]);
-        setSelected([...selected]);
+      } else {
+        let index = selected.indexOf(num);
+        selected.splice(index,1);
+        let title;
+        if(num<10){
+          title="0"+num;
+        } else title = ""+num;
+            buttons[num] = (<Button
+            title={title}
+            color="blue"
+            onPress={() => field.select(num)}
+        />);
       }
+      setButtons([...buttons]);
+      setSelected([...selected]);
     }
   }
 
@@ -194,7 +205,7 @@ export default function App() {
                 //text
                 ctx.fillStyle = 'black';
                 ctx.font = "50px sans";
-                ctx.fillText("0"+weigh.count, 121, 245);  
+                ctx.fillText("0"+weigh.count, 123, 245);  
                 break;
         }
     },
@@ -234,8 +245,7 @@ export default function App() {
         <Button
             title="?"
             onPress={() => {
-                console.log('"?" pressed');
-                //Alert.alert('"?" pressed')
+                Alert.alert('Goal: find the star!','Rules: select elements to field and place them on weigh, count of weigh is limited.\nAdvice: all element have the same weight, but weight of the star is much more...\n\nControl:\n-for select element click to number in the field,\n-for place selected element to the left part of weight - select and press left, same for the right...\n-for trying to guess the star - select one element and click to "x"')
             }}
           />
       </View>
@@ -287,17 +297,32 @@ export default function App() {
               weigh.left = [...selected];
               setSelected([]);
               field.refresh();
-              console.log("left:",weigh.left);
             }}
           />
           <Button
             title="---x---"
             style={styles.footerButton}
             onPress={() => {
-              //Alert.alert('Right button pressed')
-              field.build(); //!
-              weigh.refresh();
-              weigh.draw();
+              //if not only one selected then show warning
+              if(selected.length!==1) {
+                Alert.alert('Only one element can be selected')
+              } else {
+                //compare with answer
+                let succesfull;
+                if (selected[0]==field.star){
+                       succesfull = true;
+                } else succesfull = false;
+                //if succesfull - succesfull mesage and restart
+                //if not then write(you can try) again
+                if(succesfull) {
+                     Alert.alert("Succesfull, let's try to find next star");
+                     field.build(); 
+                     weigh.refresh();
+                } else {
+                  Alert.alert("Failure, let's continue trying this star");
+                }
+                weigh.draw();
+              }
             }}
           />
           <Button
@@ -308,7 +333,6 @@ export default function App() {
               weigh.right = [...selected];
               setSelected([]);
               field.refresh();
-              console.log("right:",weigh.right);
             }}
           />
          </View>
