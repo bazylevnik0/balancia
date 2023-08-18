@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "balancia",
-    "slug": "snack-f4e2fb86-b522-428b-879a-92b6b0f4ce95",
+    "slug": "balancia",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bazylevnik0.snackf4e2fb86b522428b879a92b6b0f4ce95"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,8 +30,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "4784fe56-e11c-41ab-b916-730d4434e9d1"
+        "projectId": "1980fd4e-cb6a-4c48-9d37-f493d34fd9af"
       }
-    }
+    },
+    "owner": "bazylevnik0"
   }
 }
